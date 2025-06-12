@@ -46,6 +46,20 @@ tmp/
 temp/
 *.tmp
 
+# Training artifacts - exclude from Docker build
+qwen_1_8b_lora/checkpoint-*/
+qwen_1_8b_lora/runs/
+qwen_1_8b_lora/.ipynb_checkpoints/
+qwen_1_8b_lora/optimizer.pt
+qwen_1_8b_lora/scheduler.pt
+qwen_1_8b_lora/trainer_state.json
+qwen_1_8b_lora/training_args.bin
+qwen_1_8b_lora/rng_state.pth
+
 # Keep the important files for the container
-!qwen_1_8b_lora/
+!qwen_1_8b_lora/adapter_model.safetensors
+!qwen_1_8b_lora/adapter_config.json
+!qwen_1_8b_lora/special_tokens_map.json
+!qwen_1_8b_lora/tokenizer_config.json
+!qwen_1_8b_lora/qwen.tiktoken
 !start_lora.sh

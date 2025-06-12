@@ -1,6 +1,8 @@
-FROM vllm/vllm-openai:v0.7.2
+# Use latest tag as fallback if v0.7.2 has registry issues
+FROM vllm/vllm-openai:latest
 
-RUN pip install --no-cache-dir peft accelerate
+# Install dependencies with retry logic
+RUN pip install --no-cache-dir --retries 3 --timeout 60 peft accelerate
 
 ENV MODEL_NAME="Qwen/Qwen-1_8B"
 ENV LORA_ADAPTER_PATH="/app/qwen_1_8b_lora"

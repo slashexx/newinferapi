@@ -28,6 +28,9 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: List contents of qwen_1_8b_lora
+        run: ls -lhR qwen_1_8b_lora/
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:

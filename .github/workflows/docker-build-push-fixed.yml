@@ -4,6 +4,7 @@ on:
   push:
     branches: [main, master]
     tags: ['v*']
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: qwen-lora-inference-api
@@ -15,6 +16,28 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          echo "Initial disk usage:"
+          df -h
+
+          echo "Removing unused packages..."
+          sudo apt-get remove -y '^ghc-8.*' '^dotnet-.*' '^llvm-.*' '^mongodb-.*' '^mysql-.*' '^php.*' '^docker-.*' || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+
+          echo "Cleaning Docker system..."
+          docker system prune -af || true
+
+          echo "Removing large directories..."
+          sudo rm -rf /usr/local/lib/android || true
+          sudo rm -rf /usr/share/dotnet || true
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+
+          echo "Final disk usage:"
+          df -h
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -32,13 +55,12 @@ jobs:
         run: ls -lhR qwen_1_8b_lora/
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: true
+          pull: true
           tags: docker.io/${{ vars.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-          build-args: |
-            SKIP_HEAVY=1
           retry: 3
           cache-from: type=gha
           cache-to: type=gha,mode=max

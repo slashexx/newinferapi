@@ -1,5 +1,13 @@
 FROM vllm/vllm-openai:v0.6.4.post1
 
+# Install build tools and fix CUDA linking for LoRA compilation
+RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables to help with CUDA linking
+ENV CUDA_HOME=/usr/local/cuda
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+ENV LIBRARY_PATH=/usr/local/cuda/lib64/stubs:/usr/local/cuda/lib64:$LIBRARY_PATH
+
 # Install dependencies with retry logic
 RUN pip install --no-cache-dir --retries 3 --timeout 60 peft accelerate
 

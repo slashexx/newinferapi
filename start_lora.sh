@@ -18,9 +18,11 @@ CMD="$CMD --host $HOST"
 CMD="$CMD --port $PORT"
 CMD="$CMD --trust-remote-code"
 
+# Enable LoRA with fallback options for compilation issues
 CMD="$CMD --enable-lora"
 CMD="$CMD --max-loras $MAX_LORAS"
 CMD="$CMD --max-lora-rank $MAX_LORA_RANK"
+CMD="$CMD --enforce-eager"
 
 if [ "$LORA_DTYPE" != "auto" ]; then
     CMD="$CMD --lora-dtype $LORA_DTYPE"

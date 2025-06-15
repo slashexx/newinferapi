@@ -12,7 +12,7 @@ fi
 echo "📦 Base model: $MODEL_NAME"
 echo "🔧 LoRA adapter path: $LORA_ADAPTER_PATH"
 
-CMD="python -m vllm.entrypoints.openai.api_server"
+CMD="python3 -m vllm.entrypoints.openai.api_server"
 CMD="$CMD --model $MODEL_NAME"
 CMD="$CMD --host $HOST"
 CMD="$CMD --port $PORT"

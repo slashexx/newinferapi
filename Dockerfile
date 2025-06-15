@@ -1,4 +1,4 @@
-FROM vllm/vllm-openai:v0.7.2
+FROM vllm/vllm-openai:v0.6.4.post1
 
 # Install dependencies with retry logic
 RUN pip install --no-cache-dir --retries 3 --timeout 60 peft accelerate

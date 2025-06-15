@@ -38,7 +38,6 @@ fi
 if [ ! -z "$API_KEY" ]; then
     CMD="$CMD --api-key $API_KEY"
 fi
-
 LORA_LOADED=false
 
 if [ ! -z "$LORA_ADAPTER_HF_MODEL" ]; then

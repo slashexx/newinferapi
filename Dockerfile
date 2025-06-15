@@ -29,7 +29,8 @@ ENV TENSOR_PARALLEL_SIZE=1
 # Copy LoRA adapter weights
 COPY qwen_1_8b_lora/ /app/qwen_1_8b_lora/
 
-# Copy startup script
+# Copy chat template and startup script  
+COPY chat_template.jinja /app/chat_template.jinja
 COPY start_lora.sh /start_lora.sh
 RUN chmod +x /start_lora.sh
 

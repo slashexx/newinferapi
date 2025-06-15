@@ -17,6 +17,7 @@ CMD="$CMD --model $MODEL_NAME"
 CMD="$CMD --host $HOST"
 CMD="$CMD --port $PORT"
 CMD="$CMD --trust-remote-code"
+CMD="$CMD --chat-template /app/chat_template.jinja"
 
 # Enable LoRA with fallback options for compilation issues
 CMD="$CMD --enable-lora"

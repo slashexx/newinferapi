@@ -16,6 +16,8 @@ ENV ENABLE_STREAMING=""
 ENV BLOCK_SIZE="NAN"
 ENV CONTEXT_WINDOW="NAN"
 
+ENV VLLM_DISABLE_MULTIMODAL=1
+
 # HF Cache directories (from your working setup)
 ENV HF_HOME="/data-models/"
 ENV HF_HUB_CACHE="/data-models/hub"

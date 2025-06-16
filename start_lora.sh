@@ -31,6 +31,9 @@ echo "Applying Qwen optimizations (disable multimodal, disable HF transfer)"
 export HF_HUB_ENABLE_HF_TRANSFER=0
 export VLLM_DISABLE_MULTIMODAL=1
 
+# Force text-only mode with explicit flags
+CMD="$CMD --disable-mm-preprocessor-cache --limit-mm-per-prompt 0"
+
 # Chat template handling
 echo "📄 Chat template content:"
 echo "===================="

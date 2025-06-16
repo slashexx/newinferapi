@@ -1,47 +1,44 @@
-FROM vllm/vllm-openai:v0.7.2
+FROM python:3.11-slim
 
-# Set environment variables with defaults (following your working pattern)
-ENV MODEL_NAME="Qwen/Qwen-1_8B"
-ENV SERVED_MODEL_NAME=""
-ENV PORT=9000
-ENV MAX_MODEL_LEN=8192
-ENV QUANTIZATION=""
-ENV AWQ_WEIGHTS_PATH=""
-ENV GGUF_MODEL_PATH=""
-ENV TENSOR_PARALLEL_SIZE="NAN"
-ENV GPU_MEMORY_UTILIZATION="NAN"
-ENV API_KEY=""
-ENV SWAP_SPACE="NAN"
-ENV ENABLE_STREAMING=""
-ENV BLOCK_SIZE="NAN"
-ENV CONTEXT_WINDOW="NAN"
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
-ENV VLLM_DISABLE_MULTIMODAL=1
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# HF Cache directories (from your working setup)
-ENV HF_HOME="/data-models/"
-ENV HF_HUB_CACHE="/data-models/hub"
-ENV HF_HOME_WRITABLE="/tmp/hf_home"
-ENV HF_HUB_CACHE_WRITABLE="/tmp/hf_hub_cache"
-ENV TRANSFORMERS_CACHE="/tmp/transformers_cache"
+# Set working directory
+WORKDIR /app
 
-# LoRA-specific environment variables
-ENV LORA_ADAPTER_PATH="/app/qwen_1_8b_lora"
-ENV LORA_ADAPTER_HF_MODEL=""
-ENV MAX_LORAS=1
-ENV MAX_LORA_RANK=64
-ENV LORA_DTYPE="auto"
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application files
+COPY app.py .
 
 # Copy LoRA adapter weights
 COPY qwen_1_8b_lora/ /app/qwen_1_8b_lora/
 
-# Copy chat template and startup script (following your working pattern)
-COPY chat_template.jinja /app/chat_template.jinja
-COPY start_lora.sh /start_lora.sh
-RUN chmod +x /start_lora.sh
+# Set environment variables with defaults
+ENV MODEL_NAME="Qwen/Qwen-1_8B"
+ENV LORA_ADAPTER_PATH="/app/qwen_1_8b_lora"
+ENV PORT=9000
+ENV MAX_MODEL_LEN=8192
+ENV API_KEY=""
+
+# Create cache directories
+RUN mkdir -p /tmp/transformers_cache
+
+# Set HuggingFace cache directories
+ENV TRANSFORMERS_CACHE="/tmp/transformers_cache"
+ENV HF_HOME="/tmp/transformers_cache"
+ENV HF_HUB_CACHE="/tmp/transformers_cache"
 
 # Expose port
 EXPOSE 9000
 
-# Set entrypoint
-ENTRYPOINT ["/start_lora.sh"]
+# Start the FastAPI server
+CMD ["python", "app.py"] 

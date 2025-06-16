@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting vLLM LoRA Inference API for Qwen 1.8B..."
+echo "🚀 Starting vLLM LoRA Inference API..."
 
 if [ -z "$MODEL_NAME" ]; then
     echo "❌ ERROR: MODEL_NAME environment variable is required"
@@ -9,22 +9,39 @@ if [ -z "$MODEL_NAME" ]; then
     exit 1
 fi
 
+# Clean up model name
+MODEL_NAME=$(echo "$MODEL_NAME" | xargs)
+MODEL_LOWER=$(echo "$MODEL_NAME" | tr '[:upper:]' '[:lower:]')
+
 echo "📦 Base model: $MODEL_NAME"
 echo "🔧 LoRA adapter path: $LORA_ADAPTER_PATH"
 
+# Initialize base command
 CMD="python3 -m vllm.entrypoints.openai.api_server"
 CMD="$CMD --model $MODEL_NAME"
 CMD="$CMD --host $HOST"
 CMD="$CMD --port $PORT"
 CMD="$CMD --trust-remote-code"
 
+# Handle model-specific configurations (similar to your working script)
+if [[ "$MODEL_LOWER" == *"qwen"* ]]; then
+    echo "Detected Qwen model, applying optimizations"
+    export HF_HUB_ENABLE_HF_TRANSFER=0
+    export VLLM_DISABLE_MULTIMODAL=1
+fi
+
+echo "📄 Chat template content:"
+echo "===================="
+cat /app/chat_template.jinja
+echo "===================="
+echo "✅ Chat template loaded from /app/chat_template.jinja"
+
 CMD="$CMD --chat-template /app/chat_template.jinja"
 
-# Enable LoRA with fallback options for compilation issues
+# Enable LoRA - remove --enforce-eager to avoid CUDA linking issues
 CMD="$CMD --enable-lora"
 CMD="$CMD --max-loras $MAX_LORAS"
 CMD="$CMD --max-lora-rank $MAX_LORA_RANK"
-CMD="$CMD --enforce-eager"
 
 if [ "$LORA_DTYPE" != "auto" ]; then
     CMD="$CMD --lora-dtype $LORA_DTYPE"

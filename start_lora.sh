@@ -54,30 +54,30 @@ if [ "$LORA_DTYPE" != "auto" ]; then
 fi
 
 # Performance settings (following your working script pattern)
-if [ "$GPU_MEMORY_UTILIZATION" != "NAN" ] && [ ! -z "$GPU_MEMORY_UTILIZATION" ]; then
-    echo "GPU_MEMORY_UTILIZATION is specified. Setting GPU memory utilization to: $GPU_MEMORY_UTILIZATION%"
-    CMD="$CMD --gpu-memory-utilization $(echo "$GPU_MEMORY_UTILIZATION / 100" | bc -l)"
-fi
+# if [ "$GPU_MEMORY_UTILIZATION" != "NAN" ] && [ ! -z "$GPU_MEMORY_UTILIZATION" ]; then
+#     echo "GPU_MEMORY_UTILIZATION is specified. Setting GPU memory utilization to: $GPU_MEMORY_UTILIZATION%"
+#     CMD="$CMD --gpu-memory-utilization $(echo "$GPU_MEMORY_UTILIZATION / 100" | bc -l)"
+# fi
 
-if [ "$TENSOR_PARALLEL_SIZE" != "NAN" ] && [ ! -z "$TENSOR_PARALLEL_SIZE" ]; then
-    echo "TENSOR_PARALLEL_SIZE specified, setting TENSOR PARALLEL SIZE to: $TENSOR_PARALLEL_SIZE"
-    CMD="$CMD --tensor-parallel-size $TENSOR_PARALLEL_SIZE"
-fi
+# if [ "$TENSOR_PARALLEL_SIZE" != "NAN" ] && [ ! -z "$TENSOR_PARALLEL_SIZE" ]; then
+#     echo "TENSOR_PARALLEL_SIZE specified, setting TENSOR PARALLEL SIZE to: $TENSOR_PARALLEL_SIZE"
+#     CMD="$CMD --tensor-parallel-size $TENSOR_PARALLEL_SIZE"
+# fi
 
-if [ "$SWAP_SPACE" != "NAN" ] && [ ! -z "$SWAP_SPACE" ]; then
-    echo "SWAP_SPACE specified, setting swap space to: $SWAP_SPACE"
-    CMD="$CMD --swap-space $SWAP_SPACE"
-fi
+# if [ "$SWAP_SPACE" != "NAN" ] && [ ! -z "$SWAP_SPACE" ]; then
+#     echo "SWAP_SPACE specified, setting swap space to: $SWAP_SPACE"
+#     CMD="$CMD --swap-space $SWAP_SPACE"
+# fi
 
-if [ ! -z "$BLOCK_SIZE" ] && [ "$BLOCK_SIZE" != "NAN" ]; then
-    echo "BLOCK_SIZE specified, setting block size to: $BLOCK_SIZE"
-    CMD="$CMD --block-size $BLOCK_SIZE"
-fi
+# if [ ! -z "$BLOCK_SIZE" ] && [ "$BLOCK_SIZE" != "NAN" ]; then
+#     echo "BLOCK_SIZE specified, setting block size to: $BLOCK_SIZE"
+#     CMD="$CMD --block-size $BLOCK_SIZE"
+# fi
 
-if [ "$CONTEXT_WINDOW" != "NAN" ] && [ ! -z "$CONTEXT_WINDOW" ]; then
-    echo "CONTEXT_WINDOW specified, setting Context Window to: $CONTEXT_WINDOW"
-    CMD="$CMD --context-window $CONTEXT_WINDOW"
-fi
+# if [ "$CONTEXT_WINDOW" != "NAN" ] && [ ! -z "$CONTEXT_WINDOW" ]; then
+#     echo "CONTEXT_WINDOW specified, setting Context Window to: $CONTEXT_WINDOW"
+#     CMD="$CMD --context-window $CONTEXT_WINDOW"
+# fi
 
 if [ ! -z "$API_KEY" ]; then
     CMD="$CMD --api-key $API_KEY"

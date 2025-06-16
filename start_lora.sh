@@ -26,12 +26,10 @@ CMD="python3 -m vllm.entrypoints.openai.api_server --model \"$MODEL_NAME\" --ser
 # Convert MODEL_NAME to lowercase for consistent comparisons
 MODEL_LOWER=$(echo "$MODEL_NAME" | tr '[:upper:]' '[:lower:]')
 
-# Qwen 1.8B/4B specific optimizations
-if [[ "$MODEL_LOWER" == *"qwen"* ]]; then
-    echo "Detected Qwen model (1.8B/4B), applying optimizations"
-    export HF_HUB_ENABLE_HF_TRANSFER=0
-    export VLLM_DISABLE_MULTIMODAL=1
-fi
+# Default optimizations for Qwen 1.8B/4B models
+echo "Applying Qwen optimizations (disable multimodal, disable HF transfer)"
+export HF_HUB_ENABLE_HF_TRANSFER=0
+export VLLM_DISABLE_MULTIMODAL=1
 
 # Chat template handling
 echo "📄 Chat template content:"

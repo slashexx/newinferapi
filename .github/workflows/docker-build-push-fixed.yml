@@ -23,7 +23,7 @@ jobs:
           df -h
 
           echo "Removing unused packages..."
-          sudo apt-get remove -y '^ghc-8.*' '^dotnet-.*' '^llvm-.*' '^mongodb-.*' '^mysql-.*' '^php.*' '^docker-.*' || true
+          sudo apt-get remove -y '^ghc-8.*' '^dotnet-.*' '^llvm-.*' '^mongodb-.*' '^mysql-.*' '^php.*' || true
           sudo apt-get autoremove -y
           sudo apt-get clean
 
@@ -51,16 +51,23 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Verify Docker login
+        run: |
+          echo "Verifying Docker Hub authentication..."
+          docker info
+
       - name: List contents of qwen_1_8b_lora
         run: ls -lhR qwen_1_8b_lora/
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           pull: true
-          tags: docker.io/${{ vars.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-          retry: 3
+          tags: |
+            docker.io/${{ vars.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            docker.io/${{ vars.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          platforms: linux/amd64

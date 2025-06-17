@@ -3,7 +3,7 @@
   "auto_mapping": null,
   "base_model_name_or_path": "Qwen/Qwen-1_8B",
   "bias": "none",
-  "dora_config": null,
+  "corda_config": null,
   "eva_config": null,
   "exclude_modules": null,
   "fan_in_fan_out": false,
